@@ -1,4 +1,3 @@
-"""Run the paper-style XGBoost/history comparison on April 2016 NYC DOT data."""
 from pathlib import Path
 import json, zipfile, hashlib, importlib.metadata, sys
 
