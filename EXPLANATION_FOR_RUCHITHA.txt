@@ -1,0 +1,16 @@
+Why this result is much higher than the earlier result
+
+The April experiment uses a different dataset and a different target from the run that produced about 40% to 60% accuracy. It is not a direct before-and-after comparison with that result.
+
+The April 2016 file contains NYC DOT speed readings, not congestion labels. To make a target, this project derives five labels for each road from that road's average speed and standard deviation during the training period. Slow readings become higher congestion classes. The earlier Kaggle run used the dataset's supplied labels (six classes). The attached Stanford paper also reports five classes, but its original four-week Outscraper dataset is different from this DOT feed.
+
+The April baseline follows the paper's input idea: road, weekday and hour predict the congestion class. The extension adds a congestion label computed from the same road's earlier speed reading. Traffic conditions tend to persist from one five-minute interval to the next, so this history feature carries a strong clue about the next label. That is why accuracy rises from 61.45% to 79.87%.
+
+The persistence reference makes that effect clearer: simply predicting that congestion stays at its previous level gets 78.31%. So the XGBoost model with three history readings is only 1.56 percentage points above that simple reference, even though it is 18.42 points above the road/day/hour baseline. Its macro F1 (0.700) is also slightly below persistence (0.707). The result supports the value of temporal context on this sample, but it does not show a large gain over persistence on every class.
+
+We used the same 10 road links and the same chronological 9,646-row test period for every model. Congestion history uses exact readings 5, 15 and 30 minutes earlier; if a bin is missing, that case is excluded from all comparisons. There are 44,322 training, 9,783 validation and 9,646 test rows. The test was held out after model choices were made on validation data.
+
+The result is specific to the first 28 days and 10 selected links in this archive. It does not mean the model will get 79.87% on the earlier Kaggle file, the paper's dataset, every NYC road, or future data. To compare fairly with the earlier ~60% result, rerun both approaches on the same CSV, congestion-label rule, target time and chronological split.
+
+Suggested short explanation to send:
+"The higher percentage is from a different data source and label setup. The April DOT CSV contains speeds, so I created five road-specific congestion labels from training-period speed averages and standard deviations. Adding past labels helps because traffic changes gradually: previous congestion predicts the next five-minute interval. The 3-lag model scored 79.87% versus 61.45% for road/day/hour, but simple persistence already scores 78.31%, so the extra gain over persistence is modest. These results aren't directly comparable to our earlier run unless we use the same dataset and label/split setup."

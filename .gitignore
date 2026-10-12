@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+april2016_results/*.csv
+april2016_results/*.json
+april2016_results/*.ubj
